@@ -1,11 +1,16 @@
 # Rhythm Runner
 
-![CI/CD Pipeline](https://github.com/YOUR_USERNAME/rhythm-runner/workflows/CI%2FCD%20Pipeline/badge.svg)
-![Test Coverage](https://github.com/YOUR_USERNAME/rhythm-runner/workflows/Test%20Coverage/badge.svg)
+![CI/CD Pipeline](https://github.com/travismetcalf/rhythm-runner/workflows/CI%2FCD%20Pipeline/badge.svg)
+![Test Coverage](https://github.com/travismetcalf/rhythm-runner/workflows/Test%20Coverage/badge.svg)
+![Deploy Pages](https://github.com/travismetcalf/rhythm-runner/workflows/Deploy%20to%20GitHub%20Pages/badge.svg)
 ![Node Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
 A Geometry Dash-inspired rhythm platformer built with vanilla JavaScript, Canvas 2D, and Web Audio API.
+
+## 🎮 Play Now
+
+**[Play Rhythm Runner](https://travismetcalf.github.io/rhythm-runner/)**
 
 ## Features
 
