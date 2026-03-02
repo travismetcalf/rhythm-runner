@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rhythm Runner</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>RHYTHM RUNNER</h1>
+            <div id="hud">
+                <span>Attempt: <span id="attempt-value">1</span></span>
+                <span>Progress: <span id="progress-value">0</span>%</span>
+                <span>Level: <span id="level-name">—</span></span>
+            </div>
+        </header>
+
+        <main>
+            <canvas id="game-canvas"></canvas>
+            
+            <!-- Editor sidebar (hidden by default) -->
+            <aside id="editor-panel" class="hidden">
+                <h2>Editor</h2>
+                <div id="obstacle-palette"></div>
+                <div id="editor-controls">
+                    <button id="playtest-btn">▶ Test</button>
+                    <button id="export-btn">💾 Export</button>
+                    <button id="import-btn">📁 Import</button>
+                </div>
+            </aside>
+
+            <!-- Menu overlay -->
+            <div id="menu-overlay">
+                <button id="play-btn">Play</button>
+                <button id="editor-btn">Level Editor</button>
+                <button id="levels-btn">Select Level</button>
+            </div>
+        </main>
+
+        <footer>
+            <button id="mute-btn">🔊 Sound On</button>
+            <p>Controls: SPACE/CLICK to jump | R to restart | ESC to pause | M to mute</p>
+        </footer>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
