@@ -102,6 +102,7 @@ describe('player', () => {
 
         it('does not apply jump force when not grounded', () => {
             player.isGrounded = false;
+            player.y = GROUND_Y - PLAYER_SIZE * 2; // position above ground so ground collision doesn't flip isGrounded back to true
             const initialVelocity = player.velocity.y;
             player.onJumpPress();
             player.update(0.016);
