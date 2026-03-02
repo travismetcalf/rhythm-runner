@@ -78,6 +78,33 @@ npm run test:e2e
 npm run serve:test
 ```
 
+### Test Suite
+
+The codebase includes comprehensive unit and end-to-end tests:
+
+**Unit Tests** (6 files, 500+ lines, 6 test suites)
+- `utils.test.js` (6 test suites): squaredDistance, clamp, lerp, rectIntersects, getBounds, toRadians
+- `physics.test.js` (6 test suites): applyGravity, applyVelocity, ground/ceiling collision
+- `levelData.test.js` (1 test suite): Level data validation and initialization
+- `obstacles.test.js` (9 test suites): All 5 obstacle types + factory pattern
+- `player.test.js` (11 test suites): Initialization, physics modes (CUBE/SHIP/BALL), jump mechanics
+- `input.test.js` (7 test suites): Keyboard (Space, ArrowUp, W) and mouse input events
+
+**End-to-End Tests** (1 file, 11 test scenarios)
+- Canvas initialization (800×600 render target)
+- Game state transitions (MENU → PLAYING → COMPLETE/DEAD)
+- Player movement and physics
+- Collision detection with obstacles
+- Debug hooks (`__RHYTHM_DEBUG__.*`)
+- HUD rendering (attempt counter, progress bar)
+- Audio system (mute/unmute toggle)
+
+**Code Quality**
+- Comprehensive JSDoc documentation for all public functions
+- Input validation and error handling in core systems
+- Null-safety checks in collision detection
+- Console warnings for invalid states
+
 ### CI/CD Pipeline
 
 This project uses **GitHub Actions** for automated testing and deployment:
