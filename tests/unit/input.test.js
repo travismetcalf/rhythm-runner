@@ -4,7 +4,7 @@ import { input } from '../../input.js';
 describe('input', () => {
     beforeEach(() => {
         // Reset input state
-        input.callbacks = [];
+        input.listeners = [];
     });
 
     describe('initialization', () => {
@@ -14,8 +14,8 @@ describe('input', () => {
         });
 
         it('starts with no callbacks', () => {
-            expect(input.callbacks).toBeDefined();
-            expect(Array.isArray(input.callbacks)).toBe(true);
+            expect(input.listeners).toBeDefined();
+            expect(Array.isArray(input.listeners)).toBe(true);
         });
     });
 
@@ -23,7 +23,7 @@ describe('input', () => {
         it('registers a callback', () => {
             const callback = vi.fn();
             input.onJump(callback);
-            expect(input.callbacks.length).toBeGreaterThan(0);
+            expect(input.listeners.length).toBeGreaterThan(0);
         });
 
         it('registers multiple callbacks', () => {
@@ -31,7 +31,7 @@ describe('input', () => {
             const cb2 = vi.fn();
             input.onJump(cb1);
             input.onJump(cb2);
-            expect(input.callbacks.length).toBe(2);
+            expect(input.listeners.length).toBe(2);
         });
 
         it('accepts function as callback', () => {
@@ -45,8 +45,8 @@ describe('input', () => {
             const callback = vi.fn();
             input.onJump(callback);
 
-            const event = new KeyboardEvent('keydown', { code: 'Space' });
-            document.dispatchEvent(event);
+            const event = new KeyboardEvent('keydown', { key: ' ' });
+            window.dispatchEvent(event);
 
             expect(callback).toHaveBeenCalled();
         });
@@ -55,8 +55,8 @@ describe('input', () => {
             const callback = vi.fn();
             input.onJump(callback);
 
-            const event = new KeyboardEvent('keydown', { code: 'ArrowUp' });
-            document.dispatchEvent(event);
+            const event = new KeyboardEvent('keydown', { key: 'ArrowUp' });
+            window.dispatchEvent(event);
 
             expect(callback).toHaveBeenCalled();
         });
@@ -65,8 +65,8 @@ describe('input', () => {
             const callback = vi.fn();
             input.onJump(callback);
 
-            const event = new KeyboardEvent('keydown', { code: 'KeyW' });
-            document.dispatchEvent(event);
+            const event = new KeyboardEvent('keydown', { key: 'w' });
+            window.dispatchEvent(event);
 
             expect(callback).toHaveBeenCalled();
         });
@@ -75,20 +75,20 @@ describe('input', () => {
             const callback = vi.fn();
             input.onJump(callback);
 
-            const event = new KeyboardEvent('keyup', { code: 'Space' });
-            document.dispatchEvent(event);
+            const event = new KeyboardEvent('keyup', { key: ' ' });
+            window.dispatchEvent(event);
 
             expect(callback).toHaveBeenCalled();
         });
     });
 
     describe('mouse input', () => {
-        it('responds to click', () => {
+        it('responds to mousedown', () => {
             const callback = vi.fn();
             input.onJump(callback);
 
-            const event = new MouseEvent('click');
-            document.dispatchEvent(event);
+            const event = new MouseEvent('mousedown', { button: 0 });
+            window.dispatchEvent(event);
 
             expect(callback).toHaveBeenCalled();
         });
@@ -99,8 +99,8 @@ describe('input', () => {
             const callback = vi.fn();
             input.onJump(callback);
 
-            const event = new KeyboardEvent('keydown', { code: 'Space' });
-            document.dispatchEvent(event);
+            const event = new KeyboardEvent('keydown', { key: ' ' });
+            window.dispatchEvent(event);
 
             expect(callback).toHaveBeenCalledWith(
                 expect.objectContaining({ type: 'press' })
@@ -111,8 +111,8 @@ describe('input', () => {
             const callback = vi.fn();
             input.onJump(callback);
 
-            const event = new KeyboardEvent('keyup', { code: 'Space' });
-            document.dispatchEvent(event);
+            const event = new KeyboardEvent('keyup', { key: ' ' });
+            window.dispatchEvent(event);
 
             expect(callback).toHaveBeenCalledWith(
                 expect.objectContaining({ type: 'release' })
@@ -121,16 +121,15 @@ describe('input', () => {
     });
 
     describe('input debouncing', () => {
-        it('does not fire multiple events for single keydown', () => {
+        it('fires press once while key is held', () => {
             const callback = vi.fn();
             input.onJump(callback);
 
-            const event = new KeyboardEvent('keydown', { code: 'Space' });
-            document.dispatchEvent(event);
-            document.dispatchEvent(event);
+            const event = new KeyboardEvent('keydown', { key: ' ' });
+            window.dispatchEvent(event);
+            window.dispatchEvent(event);
 
-            // Should be called multiple times actually (not debounced per keydown)
-            expect(callback.mock.calls.length).toBeGreaterThanOrEqual(1);
+            expect(callback.mock.calls.length).toBe(1);
         });
     });
 
@@ -139,8 +138,8 @@ describe('input', () => {
             const callback = vi.fn();
             input.onJump(callback);
 
-            const event = new KeyboardEvent('keydown', { code: 'KeyA' });
-            document.dispatchEvent(event);
+            const event = new KeyboardEvent('keydown', { key: 'a' });
+            window.dispatchEvent(event);
 
             // Should not be called for non-jump keys
             expect(callback).not.toHaveBeenCalled();

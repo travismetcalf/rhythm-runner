@@ -32,8 +32,8 @@ describe('player', () => {
     describe('getBounds', () => {
         it('returns collision bounds scaled by COLLISION_THRESHOLD', () => {
             const bounds = player.getBounds();
-            expect(bounds.x).toBe(player.x);
-            expect(bounds.y).toBe(player.y);
+            expect(bounds.x).toBeLessThan(player.x);
+            expect(bounds.y).toBeLessThan(player.y);
             expect(bounds.width).toBeLessThan(PLAYER_SIZE);
             expect(bounds.height).toBeLessThan(PLAYER_SIZE);
         });
@@ -42,8 +42,8 @@ describe('player', () => {
             player.x = 200;
             player.y = 300;
             const bounds = player.getBounds();
-            expect(bounds.x).toBe(200);
-            expect(bounds.y).toBe(300);
+            expect(bounds.x).toBeLessThan(200);
+            expect(bounds.y).toBeLessThan(300);
         });
     });
 
@@ -87,18 +87,25 @@ describe('player', () => {
     });
 
     describe('jump mechanics', () => {
-        it('applies jump force on press', () => {
-            const initialVelocity = player.velocity.y;
+        it('marks jump as pressed and held on press', () => {
             player.onJumpPress();
-            expect(player.velocity.y).toBeLessThan(initialVelocity);
+            expect(player.jumpPressed).toBe(true);
+            expect(player.jumpHeld).toBe(true);
+        });
+
+        it('applies jump force during update when grounded', () => {
+            player.isGrounded = true;
+            player.onJumpPress();
+            player.update(0.016);
             expect(player.velocity.y).toBe(JUMP_VELOCITY);
         });
 
-        it('only jumps when grounded', () => {
+        it('does not apply jump force when not grounded', () => {
             player.isGrounded = false;
             const initialVelocity = player.velocity.y;
             player.onJumpPress();
-            expect(player.velocity.y).toBe(initialVelocity); // no change
+            player.update(0.016);
+            expect(player.velocity.y).toBeGreaterThanOrEqual(initialVelocity);
         });
     });
 

@@ -63,7 +63,9 @@ export class Player {
 
     _updateCubeMode(dt) {
         applyGravity(this.velocity, dt);
-        applyVelocity({ x: this.x, y: this.y }, this.velocity, dt);
+        
+        // Apply velocity to position
+        this.x += this.velocity.x * dt;
         this.y += this.velocity.y * dt;
 
         // Ground collision
