@@ -6,8 +6,16 @@ import { BASE_SCROLL_SPEED, GROUND_Y, COLORS, CANVAS_WIDTH, CANVAS_HEIGHT } from
 import { createObstacle } from './obstacles.js';
 
 export class Level {
+    /**
+     * Create a new level instance.
+     * @param {Object} levelData - Level configuration with {name, length, obstacles, scrollSpeed, bpm}
+     * @throws {Error} If levelData is missing or invalid
+     */
     constructor(levelData) {
-        this.name = levelData.name;
+        if (!levelData) {
+            throw new Error('Level requires levelData parameter');
+        }
+        this.name = levelData.name || 'Unnamed Level';
         this.scrollSpeed = levelData.scrollSpeed || BASE_SCROLL_SPEED;
         this.length = levelData.length || 5000; // pixels
         this.bpm = levelData.bpm || 120;

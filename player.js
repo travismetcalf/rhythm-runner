@@ -15,7 +15,14 @@ import {
 import { applyGravity, applyVelocity, checkGroundCollision, resolveGroundCollision } from './physics.js';
 import { getBounds, toRadians } from './utils.js';
 
+/**
+ * Player entity representing the controllable character.
+ * Supports multiple modes (CUBE, SHIP, BALL) with different physics behaviors.
+ */
 export class Player {
+    /**
+     * Create a new player instance starting at ground level.
+     */
     constructor() {
         this.x = PLAYER_START_X;
         this.y = GROUND_Y - PLAYER_SIZE / 2; // start on ground

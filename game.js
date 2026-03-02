@@ -159,6 +159,10 @@ export class Game {
 
     /** Public API for starting gameplay */
     startPlaying(levelData) {
+        if (!levelData) {
+            console.error('Game.startPlaying: levelData is required');
+            return;
+        }
         this.currentLevel = levelData;
         this.attempt = 1;
         this.progress = 0;
@@ -169,18 +173,25 @@ export class Game {
 
     /** Initialize level entities */
     _initLevel() {
-        this.player = new Player();
-        this.level = new Level(this.currentLevel);
+        try {
+            this.player = new Player();
+            this.level = new Level(this.currentLevel);
+        } catch (error) {
+            console.error('Failed to initialize level:', error);
+            this.setState(STATE.MENU);
+        }
     }
 
     /** Check collision detection */
     _checkCollisions() {
+        if (!this.player || !this.level) return;
+        
         const playerBounds = this.player.getBounds();
         const obstacles = this.level.getActiveObstacles();
 
         for (const obstacle of obstacles) {
-            if (obstacle.collidesWith(playerBounds)) {
-                if (obstacle.isDeadly()) {
+            if (obstacle && obstacle.collidesWith && obstacle.collidesWith(playerBounds)) {
+                if (obstacle.isDeadly && obstacle.isDeadly()) {
                     this.player.die();
                     return;
                 }
@@ -192,6 +203,10 @@ export class Game {
 
     /** Restart current level */
     restart() {
+        if (!this.player || !this.level) {
+            console.warn('Cannot restart: entities not initialized');
+            return;
+        }
         this.attempt++;
         this.player.reset();
         this.level.reset();
