@@ -57,15 +57,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Build deployment artifact
+        run: |
+          mkdir -p dist
+          cp index.html styles.css dist/
+          cp audio.js config.js game.js input.js level.js levelData.js \
+             main.js obstacles.js physics.js player.js utils.js dist/
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: dist/
 
       - name: Deploy to GitHub Pages
         id: deployment
