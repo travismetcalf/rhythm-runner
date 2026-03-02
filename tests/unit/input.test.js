@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, expect, it, beforeEach, vi } from 'vitest';
 import { input } from '../../input.js';
 
@@ -5,6 +6,7 @@ describe('input', () => {
     beforeEach(() => {
         // Reset input state
         input.listeners = [];
+        input.jumpActive = false;
     });
 
     describe('initialization', () => {

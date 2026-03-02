@@ -113,6 +113,7 @@ describe('player', () => {
         it('applies gravity in cube mode', () => {
             player.mode = PLAYER_MODE.CUBE;
             player.isGrounded = false;
+            player.y = GROUND_Y - PLAYER_SIZE * 2; // position above ground so gravity isn't immediately cancelled
             const initialY = player.y;
             player.update(0.1);
             expect(player.y).toBeGreaterThan(initialY);
@@ -148,6 +149,7 @@ describe('player', () => {
 
         it('does not thrust when jump not held', () => {
             player.jumpHeld = false;
+            player.y = GROUND_Y - PLAYER_SIZE * 2; // position above ground so ground collision doesn't reset velocity
             const initialVelocity = player.velocity.y;
             player.update(0.1);
             expect(player.velocity.y).toBeGreaterThan(initialVelocity);
