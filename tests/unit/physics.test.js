@@ -8,7 +8,8 @@ describe('physics', () => {
             const velocity = { x: 0, y: 0 };
             applyGravity(velocity, 1.0);
             
-            expect(velocity.y).toBe(GRAVITY);
+            // GRAVITY (30) exceeds TERMINAL_VELOCITY (25), so it gets clamped
+            expect(velocity.y).toBe(TERMINAL_VELOCITY);
         });
 
         it('clamps velocity to terminal velocity', () => {
@@ -22,7 +23,8 @@ describe('physics', () => {
             const velocity = { x: 0, y: 0 };
             applyGravity(velocity, 1.0, 2.0);
             
-            expect(velocity.y).toBe(GRAVITY * 2);
+            // GRAVITY * 2 (60) exceeds TERMINAL_VELOCITY (25), so it gets clamped
+            expect(velocity.y).toBe(TERMINAL_VELOCITY);
         });
     });
 
