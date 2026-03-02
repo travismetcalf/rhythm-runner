@@ -59,7 +59,11 @@ window.addEventListener('keydown', (e) => {
     const activeTag = document.activeElement?.tagName;
     if (activeTag === 'INPUT' || activeTag === 'TEXTAREA') return;
 
-    if (e.key === 'm' || e.key === 'M') {
+    if (e.key === ' ' || e.key === 'Enter') {
+        if (game.state === STATE.MENU) {
+            game.startPlaying(getLevelById('level1'));
+        }
+    } else if (e.key === 'm' || e.key === 'M') {
         const muted = toggleMute();
         muteBtn.textContent = muted ? '🔇 Sound Off' : '🔊 Sound On';
     } else if (e.key === 'r' || e.key === 'R') {

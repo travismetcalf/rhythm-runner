@@ -87,9 +87,9 @@ export class Player {
 
     _updateShipMode(dt) {
         // Ship: hold to fly up, release to fall
-        const thrust = this.jumpHeld ? -20 : 15; // upward vs downward acceleration
+        const thrust = this.jumpHeld ? -800 : 600; // upward vs downward acceleration
         this.velocity.y += thrust * dt;
-        this.velocity.y = Math.max(-15, Math.min(15, this.velocity.y));
+        this.velocity.y = Math.max(-600, Math.min(600, this.velocity.y));
         this.y += this.velocity.y * dt;
 
         // Bounds checking

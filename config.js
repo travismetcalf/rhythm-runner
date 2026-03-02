@@ -8,9 +8,9 @@ export const CANVAS_HEIGHT = 600;
 export const BG_COLOR = '#1a1a2e';
 
 // === Physics ===
-export const GRAVITY = 30; // pixels per second squared
-export const JUMP_VELOCITY = -15; // pixels per second (negative = up)
-export const TERMINAL_VELOCITY = 25; // max fall speed
+export const GRAVITY = 1200; // pixels per second squared
+export const JUMP_VELOCITY = -600; // pixels per second (negative = up)
+export const TERMINAL_VELOCITY = 800; // max fall speed
 export const GROUND_Y = 500; // ground level (pixels from top)
 
 // === Player ===

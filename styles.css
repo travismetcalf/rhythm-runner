@@ -94,7 +94,6 @@ main {
     justify-content: center;
     align-items: center;
     gap: 20px;
-    border: 4px solid #00ffff;
 }
 
 #menu-overlay.hidden {
