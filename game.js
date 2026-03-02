@@ -108,11 +108,12 @@ export class Game {
         this.progress = this.level.getProgress();
         this._emitHudUpdate();
 
-        // Check win condition
+        // Check win condition (return early so death can't also trigger on this frame)
         if (this.level.isComplete()) {
             this.setState(STATE.COMPLETE);
             playLevelCompleteSound();
             this.onGameEnd({ result: 'complete', attempts: this.attempt });
+            return;
         }
 
         // Check death
@@ -203,6 +204,7 @@ export class Game {
 
     /** Restart current level */
     restart() {
+        if (this.state !== STATE.DEAD) return;
         if (!this.player || !this.level) {
             console.warn('Cannot restart: entities not initialized');
             return;

@@ -12,7 +12,7 @@ import {
     COLORS,
     COLLISION_THRESHOLD,
 } from './config.js';
-import { applyGravity, applyVelocity, checkGroundCollision, resolveGroundCollision } from './physics.js';
+import { applyGravity, checkGroundCollision } from './physics.js';
 import { getBounds, toRadians } from './utils.js';
 
 /**
@@ -70,7 +70,6 @@ export class Player {
 
         // Ground collision
         if (checkGroundCollision(this.y, this.size)) {
-            resolveGroundCollision({ y: this.y }, this.size);
             this.y = GROUND_Y - this.size / 2;
             this.velocity.y = 0;
             this.isGrounded = true;
@@ -195,5 +194,7 @@ export class Player {
         this.isDead = false;
         this.rotation = 0;
         this.mode = PLAYER_MODE.CUBE;
+        this.jumpPressed = false;
+        this.jumpHeld = false;
     }
 }
