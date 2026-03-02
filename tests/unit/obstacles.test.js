@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it, beforeEach, vi } from 'vitest';
 import { Obstacle, Spike, Block, Platform, Orb, Portal, createObstacle } from '../../obstacles.js';
 import { OBSTACLE_TYPE } from '../../config.js';
 
@@ -147,9 +147,11 @@ describe('obstacles', () => {
         });
 
         it('returns base Obstacle for unknown type', () => {
+            const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
             const data = { type: 'UNKNOWN', x: 100, y: 200, props: {} };
             const obstacle = createObstacle(data);
             expect(obstacle).toBeInstanceOf(Obstacle);
+            warnSpy.mockRestore();
         });
     });
 });
