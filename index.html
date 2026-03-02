@@ -20,8 +20,17 @@
         </header>
 
         <main>
-            <canvas id="game-canvas"></canvas>
-            
+            <div id="game-container">
+                <canvas id="game-canvas"></canvas>
+
+                <!-- Menu overlay -->
+                <div id="menu-overlay">
+                    <button id="play-btn">Play</button>
+                    <button id="editor-btn">Level Editor</button>
+                    <button id="levels-btn">Select Level</button>
+                </div>
+            </div>
+
             <!-- Editor sidebar (hidden by default) -->
             <aside id="editor-panel" class="hidden">
                 <h2>Editor</h2>
@@ -32,13 +41,6 @@
                     <button id="import-btn">📁 Import</button>
                 </div>
             </aside>
-
-            <!-- Menu overlay -->
-            <div id="menu-overlay">
-                <button id="play-btn">Play</button>
-                <button id="editor-btn">Level Editor</button>
-                <button id="levels-btn">Select Level</button>
-            </div>
         </main>
 
         <footer>

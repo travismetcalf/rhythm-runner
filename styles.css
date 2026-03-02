@@ -14,50 +14,66 @@ body {
     color: #00ffff;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     min-height: 100vh;
+    padding: clamp(8px, 2vw, 20px);
 }
 
 #app {
     width: 100%;
     max-width: 1000px;
-    padding: 20px;
 }
 
 h1 {
     text-align: center;
-    font-size: 2rem;
+    font-size: clamp(0.7rem, 3.5vw, 2rem);
     margin-bottom: 10px;
     text-shadow: 3px 3px 0 #ff00ff;
 }
 
 h2 {
-    font-size: 1rem;
+    font-size: clamp(0.6rem, 1.5vw, 1rem);
     margin-bottom: 15px;
 }
 
 #hud {
     display: flex;
     justify-content: space-around;
-    font-size: 0.8rem;
-    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 5px;
+    font-size: clamp(0.35rem, 1.2vw, 0.8rem);
+    margin-bottom: clamp(10px, 2vw, 20px);
 }
 
 main {
-    position: relative;
     display: flex;
     gap: 20px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* Game container — scales to viewport while locking 4:3 ratio */
+#game-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    aspect-ratio: 800 / 600;
+    border: 4px solid #00ffff;
+    background: #1a1a2e;
+    flex-shrink: 1;
+    min-width: 0;
 }
 
 #game-canvas {
-    border: 4px solid #00ffff;
-    background: #1a1a2e;
     display: block;
+    width: 100%;
+    height: 100%;
     image-rendering: crisp-edges;
 }
 
 #editor-panel {
     width: 200px;
+    flex-shrink: 0;
     background: #2a2a3e;
     border: 2px solid #00ffff;
     padding: 10px;
@@ -82,22 +98,27 @@ main {
     padding: 10px;
 }
 
+/* Menu overlay fills the game container at any size */
 #menu-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 800px;
-    height: 600px;
+    inset: 0;
     background: rgba(0, 0, 0, 0.9);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: clamp(8px, 2%, 20px);
 }
 
 #menu-overlay.hidden {
     display: none;
+}
+
+/* Menu buttons scale with the container */
+#menu-overlay button {
+    font-size: clamp(0.4rem, 1.8vw, 1rem);
+    padding: clamp(8px, 1.5vw, 15px) clamp(12px, 3vw, 30px);
+    width: clamp(120px, 40%, 260px);
 }
 
 button {
@@ -123,17 +144,17 @@ button:active {
 
 footer {
     text-align: center;
-    margin-top: 20px;
+    margin-top: clamp(10px, 2vw, 20px);
 }
 
 footer p {
-    font-size: 0.6rem;
+    font-size: clamp(0.4rem, 1vw, 0.6rem);
     margin-top: 10px;
     color: #888;
 }
 
 footer button {
-    font-size: 0.8rem;
+    font-size: clamp(0.5rem, 1.5vw, 0.8rem);
     padding: 10px 20px;
     margin-bottom: 10px;
 }
