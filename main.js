@@ -175,6 +175,6 @@ if (typeof window !== 'undefined') {
         setAttempt: (n) => game.setAttemptForTests(n),
         forceGameOver: () => game.forceGameOverForTests(),
         getState: () => game.state,
-        restart: () => game.restart(),
+        restart: () => { game.forceGameOverForTests(); game.restart(); },
     };
 }
