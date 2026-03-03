@@ -48,6 +48,21 @@ class InputManager {
 
         // Prevent context menu on right click
         window.addEventListener('contextmenu', (e) => e.preventDefault());
+
+        // Touch controls for mobile
+        window.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (!this.jumpActive) {
+                this.jumpActive = true;
+                this._notifyJumpPress();
+            }
+        }, { passive: false });
+
+        window.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            this.jumpActive = false;
+            this._notifyJumpRelease();
+        }, { passive: false });
     }
 
     /** Register callback for jump events */

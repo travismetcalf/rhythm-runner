@@ -88,9 +88,12 @@ export class Level {
         return this.cameraX >= this.length;
     }
 
-    /** Reset camera to start */
+    /** Reset camera and obstacle state to start */
     reset() {
         this.cameraX = 0;
+        for (const obs of this.obstacles) {
+            obs.reset?.();
+        }
     }
 
     /** Get all active obstacles for collision checking */

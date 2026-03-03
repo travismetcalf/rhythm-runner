@@ -15,18 +15,24 @@ A Geometry Dash-inspired rhythm platformer built with vanilla JavaScript, Canvas
 ## Features
 
 - **Physics-based gameplay**: Gravity, jumping, and collision detection
+- **Multiple player modes**: Cube (jump), Ship (hold to fly), Ball (gravity flip)
 - **Multiple obstacle types**: Spikes, blocks, platforms, orbs, and portals
-- **Three preset levels**: Progressive difficulty with unique patterns
+- **Power-ups**: Orbs grant super jump; portals switch player mode
+- **Three preset levels**: Progressive difficulty with level progression
+- **Level select**: Choose any level, with best-score tracking
+- **Leaderboard**: Best attempts saved to localStorage per level
+- **Particle effects**: Death explosion, jump dust, level-complete sparkles, orb collection
 - **Audio system**: Procedural sound effects using Web Audio API
+- **Mobile support**: Touch controls for phones and tablets
 - **Retro aesthetics**: Press Start 2P font and neon color scheme
 - **Auto-restart**: Seamless retry on death
 - **Progress tracking**: Real-time attempt counter and progress percentage
 
 ## Controls
 
-- **SPACE / UP ARROW / W / CLICK**: Jump
+- **SPACE / UP ARROW / W / CLICK / TAP**: Jump
 - **R**: Restart level
-- **ESC**: Pause (future feature)
+- **ESC**: Pause / resume
 - **M**: Mute/unmute audio
 
 ## How to Play
@@ -56,6 +62,8 @@ rhythm-runner/
 ├── audio.js           # Web Audio API sound effects
 ├── physics.js         # Physics calculations
 ├── utils.js           # Math and collision utilities
+├── particles.js       # Particle effects system
+├── leaderboard.js     # localStorage score persistence
 └── tests/             # Unit and E2E tests
 ```
 
@@ -82,13 +90,16 @@ npm run serve:test
 
 The codebase includes comprehensive unit and end-to-end tests:
 
-**Unit Tests** (6 files, 500+ lines, 6 test suites)
-- `utils.test.js` (6 test suites): squaredDistance, clamp, lerp, rectIntersects, getBounds, toRadians
-- `physics.test.js` (6 test suites): applyGravity, applyVelocity, ground/ceiling collision
-- `levelData.test.js` (1 test suite): Level data validation and initialization
-- `obstacles.test.js` (9 test suites): All 5 obstacle types + factory pattern
-- `player.test.js` (11 test suites): Initialization, physics modes (CUBE/SHIP/BALL), jump mechanics
-- `input.test.js` (7 test suites): Keyboard (Space, ArrowUp, W) and mouse input events
+**Unit Tests** (10 files, 156 tests)
+- `utils.test.js`: squaredDistance, clamp, lerp, rectIntersects, getBounds, toRadians
+- `physics.test.js`: applyGravity, applyVelocity, ground/ceiling collision
+- `levelData.test.js`: Level data validation, getLevelById, getNextLevelId, getAllLevels
+- `obstacles.test.js`: All 5 obstacle types + factory pattern
+- `player.test.js`: Initialization, physics modes (CUBE/SHIP/BALL), jump, superJump, setMode
+- `input.test.js`: Keyboard (Space, ArrowUp, W) and mouse input events
+- `game.test.js`: State management, startPlaying, restart, collision detection, debug hooks
+- `leaderboard.test.js`: Score persistence, best-score tracking, error resilience
+- `particles.test.js`: Particle emission, lifecycle, update/draw
 
 **End-to-End Tests** (1 file, 11 test scenarios)
 - Canvas initialization (800×600 render target)
@@ -168,12 +179,12 @@ __RHYTHM_DEBUG__.getState()     // Get current state
 ## Future Enhancements
 
 - [ ] Level editor with JSON export/import
-- [ ] More player modes (ship, ball)
-- [ ] Power-ups and collectibles
+- [x] More player modes (ship, ball)
+- [x] Power-ups and collectibles
 - [ ] Music/rhythm synchronization with beat detection
-- [ ] Visual themes and particle effects
-- [ ] Leaderboard with localStorage persistence
-- [ ] Mobile touch controls
+- [x] Visual themes and particle effects
+- [x] Leaderboard with localStorage persistence
+- [x] Mobile touch controls
 - [ ] Additional levels
 
 ## Browser Compatibility

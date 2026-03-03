@@ -8,11 +8,13 @@ let muted = false;
 /**
  * Lazily initialize Web Audio API context.
  * The AudioContext must be resumed after a user gesture (click, tap).
- * @returns {AudioContext} The audio context instance
+ * @returns {AudioContext|null} The audio context instance, or null if unsupported
  */
 function getCtx() {
     if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtxClass) return null;
+        audioCtx = new AudioCtxClass();
     }
     if (audioCtx.state === 'suspended') {
         audioCtx.resume();
@@ -31,6 +33,7 @@ function getCtx() {
 function playTone(frequency, duration, type = 'square', volume = 0.15) {
     if (muted) return;
     const ctx = getCtx();
+    if (!ctx) return;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
@@ -59,6 +62,7 @@ function playTone(frequency, duration, type = 'square', volume = 0.15) {
 function playSweep(startFreq, endFreq, duration, type = 'sawtooth', volume = 0.12) {
     if (muted) return;
     const ctx = getCtx();
+    if (!ctx) return;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 

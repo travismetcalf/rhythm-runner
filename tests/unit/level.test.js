@@ -134,6 +134,16 @@ describe('level', () => {
             level.reset();
             expect(level.isComplete()).toBe(false);
         });
+
+        it('resets obstacle collected/used state', () => {
+            // Find orb and portal in obstacles
+            const orb = level.obstacles.find(o => o.type === 'ORB');
+            if (orb) {
+                orb.collected = true;
+                level.reset();
+                expect(orb.collected).toBe(false);
+            }
+        });
     });
 
     describe('different levels', () => {

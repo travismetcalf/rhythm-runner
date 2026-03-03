@@ -168,6 +168,40 @@ describe('player', () => {
             player.onJumpPress();
             expect(player.jumpPressed).not.toBe(initialJumpState);
         });
+
+        it('flips gravityDir when grounded and jump pressed', () => {
+            player.isGrounded = true;
+            expect(player.gravityDir).toBe(1);
+            player.onJumpPress();
+            player.update(0.016);
+            expect(player.gravityDir).toBe(-1);
+        });
+
+        it('resets gravityDir on player reset', () => {
+            player.gravityDir = -1;
+            player.reset();
+            expect(player.gravityDir).toBe(1);
+        });
+    });
+
+    describe('superJump', () => {
+        it('applies stronger upward velocity', () => {
+            player.superJump();
+            expect(player.velocity.y).toBe(JUMP_VELOCITY * 1.5);
+            expect(player.isGrounded).toBe(false);
+        });
+    });
+
+    describe('setMode', () => {
+        it('switches to valid mode', () => {
+            player.setMode('SHIP');
+            expect(player.mode).toBe(PLAYER_MODE.SHIP);
+        });
+
+        it('ignores invalid mode name', () => {
+            player.setMode('INVALID');
+            expect(player.mode).toBe(PLAYER_MODE.CUBE);
+        });
     });
 
     describe('update', () => {

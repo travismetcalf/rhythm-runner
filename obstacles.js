@@ -121,6 +121,7 @@ export class Orb extends Obstacle {
     }
 
     draw(ctx, cameraX) {
+        if (this.collected) return;
         const screenX = this.x - cameraX + this.radius;
         const screenY = this.y + this.radius;
         const scale = 1 + Math.sin(this.pulsePhase) * 0.1;
@@ -128,6 +129,11 @@ export class Orb extends Obstacle {
         ctx.beginPath();
         ctx.arc(screenX, screenY, this.radius * scale, 0, Math.PI * 2);
         ctx.fill();
+    }
+
+    reset() {
+        this.collected = false;
+        this.pulsePhase = 0;
     }
 
     isDeadly() {
@@ -151,6 +157,10 @@ export class Portal extends Obstacle {
         ctx.strokeStyle = '#ff00ff';
         ctx.lineWidth = 3;
         ctx.strokeRect(screenX, this.y, this.width, this.height);
+    }
+
+    reset() {
+        this.used = false;
     }
 
     isDeadly() {

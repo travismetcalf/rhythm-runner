@@ -84,3 +84,13 @@ export const LEVELS = [
 export function getLevelById(id) {
     return LEVELS.find(level => level.id === id) || LEVELS[0];
 }
+
+export function getNextLevelId(currentId) {
+    const idx = LEVELS.findIndex(l => l.id === currentId);
+    if (idx === -1 || idx >= LEVELS.length - 1) return null;
+    return LEVELS[idx + 1].id;
+}
+
+export function getAllLevels() {
+    return LEVELS.map(l => ({ id: l.id, name: l.name }));
+}

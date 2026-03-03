@@ -29,10 +29,11 @@ export class Player {
         this.velocity = { x: 0, y: 0 };
         this.size = PLAYER_SIZE;
         this.mode = PLAYER_MODE.CUBE;
-        
+
         this.isGrounded = true;
         this.isDead = false;
         this.rotation = 0; // degrees
+        this.gravityDir = 1; // 1 = normal, -1 = flipped (ball mode)
 
         // Input state
         this.jumpPressed = false;
@@ -104,9 +105,35 @@ export class Player {
     }
 
     _updateBallMode(dt) {
-        // Ball: gravity flips on each jump
-        // TODO: Implement in polish phase
-        this._updateCubeMode(dt); // fallback to cube for now
+        // Ball: gravity flips direction on each jump press
+        if (this.jumpPressed && this.isGrounded) {
+            this.gravityDir *= -1;
+            this.isGrounded = false;
+        }
+
+        applyGravity(this.velocity, dt, this.gravityDir);
+        this.x += this.velocity.x * dt;
+        this.y += this.velocity.y * dt;
+
+        // Ground collision (normal gravity)
+        if (this.gravityDir > 0 && checkGroundCollision(this.y, this.size)) {
+            this.y = GROUND_Y - this.size / 2;
+            this.velocity.y = 0;
+            this.isGrounded = true;
+        }
+        // Ceiling collision (flipped gravity)
+        else if (this.gravityDir < 0 && this.y - this.size / 2 <= 0) {
+            this.y = this.size / 2;
+            this.velocity.y = 0;
+            this.isGrounded = true;
+        }
+        else {
+            this.isGrounded = false;
+        }
+
+        // Continuous rotation
+        this.rotation += PLAYER_ROTATION_SPEED * this.gravityDir * dt;
+        this.rotation %= 360;
     }
 
     draw(ctx) {
@@ -179,6 +206,18 @@ export class Player {
         this.jumpHeld = false;
     }
 
+    /** Super jump from orb (stronger than normal jump) */
+    superJump() {
+        this.velocity.y = JUMP_VELOCITY * 1.5;
+        this.isGrounded = false;
+    }
+
+    /** Switch player mode (from portal) */
+    setMode(modeName) {
+        const mode = PLAYER_MODE[modeName];
+        if (mode) this.mode = mode;
+    }
+
     /** Kill player (collision with obstacle) */
     die() {
         this.isDead = true;
@@ -194,6 +233,7 @@ export class Player {
         this.isDead = false;
         this.rotation = 0;
         this.mode = PLAYER_MODE.CUBE;
+        this.gravityDir = 1;
         this.jumpPressed = false;
         this.jumpHeld = false;
     }

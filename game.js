@@ -2,11 +2,12 @@
 // game.js — Core game loop, state management, collision detection
 // ============================================================================
 
-import { STATE, CANVAS_WIDTH, CANVAS_HEIGHT, BG_COLOR } from './config.js';
+import { STATE, CANVAS_WIDTH, CANVAS_HEIGHT, BG_COLOR, OBSTACLE_TYPE } from './config.js';
 import { Player } from './player.js';
 import { Level } from './level.js';
 import { input } from './input.js';
-import { playJumpSound, playDeathSound, playLevelCompleteSound } from './audio.js';
+import { playJumpSound, playDeathSound, playLevelCompleteSound, playOrbSound, playPortalSound } from './audio.js';
+import { ParticleSystem } from './particles.js';
 
 export class Game {
     constructor(canvas, callbacks = {}) {
@@ -30,6 +31,9 @@ export class Game {
         this.player = null;
         this.level = null;
 
+        // Particle effects
+        this.particles = new ParticleSystem();
+
         // Animation frame tracking
         this._lastTime = 0;
         this._animFrameId = null;
@@ -40,6 +44,9 @@ export class Game {
                 if (event.type === 'press') {
                     this.player.onJumpPress();
                     playJumpSound();
+                    if (this.player.isGrounded) {
+                        this.particles.emitJump(this.player.x, this.player.y + this.player.size / 2);
+                    }
                 } else if (event.type === 'release') {
                     this.player.onJumpRelease();
                 }
@@ -47,7 +54,7 @@ export class Game {
         });
     }
 
-    /** Start game loop (mirroring pacman-game pattern) */
+    /** Start game loop */
     run() {
         this._lastTime = performance.now();
         const loop = (timestamp) => {
@@ -74,17 +81,17 @@ export class Game {
             this._updatePlaying(dt);
         } else if (this.state === STATE.EDITOR) {
             this._updateEditor(dt);
+        } else if (this.state === STATE.DEAD || this.state === STATE.COMPLETE) {
+            this.particles.update(dt);
         }
-        // MENU, PAUSED, DEAD, COMPLETE have no update logic
     }
 
     /** Render everything */
     _draw() {
-        // Clear canvas
         this.ctx.fillStyle = BG_COLOR;
         this.ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-        if (this.state === STATE.PLAYING || this.state === STATE.DEAD) {
+        if (this.state === STATE.PLAYING || this.state === STATE.DEAD || this.state === STATE.COMPLETE) {
             this._drawPlaying();
         } else if (this.state === STATE.EDITOR) {
             this._drawEditor();
@@ -95,16 +102,11 @@ export class Game {
     _updatePlaying(dt) {
         if (!this.player || !this.level) return;
 
-        // Update level (scrolling, obstacles)
         this.level.update(dt);
-
-        // Update player
         this.player.update(dt);
-
-        // Check collisions
         this._checkCollisions();
+        this.particles.update(dt);
 
-        // Update progress
         this.progress = this.level.getProgress();
         this._emitHudUpdate();
 
@@ -112,6 +114,7 @@ export class Game {
         if (this.level.isComplete()) {
             this.setState(STATE.COMPLETE);
             playLevelCompleteSound();
+            this.particles.emitComplete(CANVAS_WIDTH, CANVAS_HEIGHT);
             this.onGameEnd({ result: 'complete', attempts: this.attempt });
             return;
         }
@@ -120,7 +123,8 @@ export class Game {
         if (this.player.isDead && this.state !== STATE.DEAD) {
             this.setState(STATE.DEAD);
             playDeathSound();
-            setTimeout(() => this.restart(), 1500); // auto-restart after 1.5s
+            this.particles.emitDeath(this.player.x, this.player.y);
+            setTimeout(() => this.restart(), 1500);
         }
     }
 
@@ -128,37 +132,32 @@ export class Game {
     _drawPlaying() {
         if (!this.level || !this.player) return;
 
-        // Draw level (background, ground, obstacles)
         this.level.draw(this.ctx);
-
-        // Draw player
         this.player.draw(this.ctx);
+        this.particles.draw(this.ctx);
 
-        // Draw death overlay
         if (this.state === STATE.DEAD) {
             this.ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         }
     }
 
-    /** Update logic for EDITOR state (implement later) */
     _updateEditor(dt) {
         // TODO: Implement in editor steps
     }
 
-    /** Draw logic for EDITOR state (implement later) */
     _drawEditor() {
         // TODO: Implement in editor steps
     }
 
-    /** Change game state with callbacks */
-    setState(newState) {
-        if (this.state === newState) return;
+    /** Change game state with callback notification */
+    setState(newState, force = false) {
+        if (!force && this.state === newState) return;
         this.state = newState;
         this.onStateChange(newState);
     }
 
-    /** Public API for starting gameplay */
+    /** Start playing a level (resets attempt counter) */
     startPlaying(levelData) {
         if (!levelData) {
             console.error('Game.startPlaying: levelData is required');
@@ -168,8 +167,13 @@ export class Game {
         this.attempt = 1;
         this.progress = 0;
         this._initLevel();
-        this.setState(STATE.PLAYING);
+        this.setState(STATE.PLAYING, true);
         this._emitHudUpdate();
+    }
+
+    /** Play a level from any state (used for level advancement) */
+    playLevel(levelData) {
+        this.startPlaying(levelData);
     }
 
     /** Initialize level entities */
@@ -183,23 +187,41 @@ export class Game {
         }
     }
 
-    /** Check collision detection */
+    /** Check all obstacle collisions against player */
     _checkCollisions() {
         if (!this.player || !this.level) return;
-        
+
         const playerBounds = this.player.getBounds();
         const obstacles = this.level.getActiveObstacles();
 
         for (const obstacle of obstacles) {
             if (obstacle && obstacle.collidesWith && obstacle.collidesWith(playerBounds)) {
-                if (obstacle.isDeadly && obstacle.isDeadly()) {
-                    this.player.die();
-                    return;
-                }
-                // Handle non-deadly interactions (orbs, portals)
-                // TODO: Implement power-up logic in future iterations
+                if (this._handleObstacleCollision(obstacle)) return;
             }
         }
+    }
+
+    /** Handle a single obstacle collision. Returns true if player died. */
+    _handleObstacleCollision(obstacle) {
+        if (obstacle.isDeadly && obstacle.isDeadly()) {
+            this.player.die();
+            return true;
+        }
+
+        if (obstacle.type === OBSTACLE_TYPE.ORB && !obstacle.collected) {
+            obstacle.collected = true;
+            this.player.superJump();
+            playOrbSound();
+            this.particles.emitOrb(obstacle.x, obstacle.y);
+        }
+
+        if (obstacle.type === OBSTACLE_TYPE.PORTAL && !obstacle.used) {
+            obstacle.used = true;
+            this.player.setMode(obstacle.targetMode);
+            playPortalSound();
+        }
+
+        return false;
     }
 
     /** Restart current level */

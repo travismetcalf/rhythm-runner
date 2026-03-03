@@ -6,7 +6,11 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html', 'json-summary'],
-      include: ['utils.js', 'physics.js', 'levelData.js', 'obstacles.js', 'config.js'],
+      include: [
+        'utils.js', 'physics.js', 'levelData.js', 'obstacles.js', 'config.js',
+        'player.js', 'level.js', 'input.js', 'game.js', 'audio.js',
+        'leaderboard.js', 'particles.js',
+      ],
       exclude: ['tests/**', 'node_modules/**', '*.config.*'],
       thresholds: {
         lines: 60,

@@ -121,6 +121,51 @@ main {
     width: clamp(120px, 40%, 260px);
 }
 
+/* Game overlay (shared by complete + level-select) */
+#complete-overlay,
+#level-select-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(8px, 2%, 20px);
+    z-index: 10;
+}
+
+#complete-overlay.hidden,
+#level-select-overlay.hidden {
+    display: none;
+}
+
+#complete-overlay button,
+#level-select-overlay button {
+    font-size: clamp(0.4rem, 1.8vw, 1rem);
+    padding: clamp(8px, 1.5vw, 15px) clamp(12px, 3vw, 30px);
+    width: clamp(120px, 40%, 260px);
+}
+
+#complete-stats {
+    font-size: clamp(0.35rem, 1.2vw, 0.7rem);
+    color: #ffff00;
+    text-align: center;
+    line-height: 1.8;
+}
+
+#level-list {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(4px, 1%, 10px);
+    width: 60%;
+    max-width: 300px;
+}
+
+#level-list button {
+    width: 100%;
+}
+
 button {
     font-family: inherit;
     font-size: 1rem;

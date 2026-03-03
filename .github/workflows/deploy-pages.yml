@@ -61,8 +61,9 @@ jobs:
         run: |
           mkdir -p dist
           cp index.html styles.css dist/
-          cp audio.js config.js game.js input.js level.js levelData.js \
-             main.js obstacles.js physics.js player.js utils.js dist/
+          cp audio.js config.js game.js input.js leaderboard.js level.js \
+             levelData.js main.js obstacles.js particles.js physics.js \
+             player.js utils.js dist/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
